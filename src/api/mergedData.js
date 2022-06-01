@@ -1,6 +1,6 @@
 // import axios from "axios";
-import { getSingleAuthor } from './authorData';
-import { getSingleBook } from './bookData';
+import { deleteSingleAuthor, getAuthorBooks, getSingleAuthor } from './authorData';
+import { deleteBook, getSingleBook } from './bookData';
 
 const viewBookDetails = (bookFirebaseKey) => new Promise((resolve, reject) => {
   getSingleBook(bookFirebaseKey)
@@ -15,11 +15,21 @@ const viewBookDetails = (bookFirebaseKey) => new Promise((resolve, reject) => {
 const viewAuthorDetails = (authorFirebaseKey) => new Promise((resolve, reject) => {
   getSingleAuthor(authorFirebaseKey)
     .then((authorObject) => {
-      getSingleAuthor(authorObject.firebaseKey)
-        .then((bookObject) => {
-          resolve({ bookObject, ...authorObject });
+      getAuthorBooks(authorFirebaseKey)
+        .then((authorBooks) => {
+          resolve({ authorBooks, ...authorObject });
         });
     }).catch((error) => reject(error));
 });
 
-export { viewBookDetails, viewAuthorDetails };
+const deleteAuthorBooks = (authorid) => new Promise((resolve, reject) => {
+  getAuthorBooks(authorid).then((booksArray) => {
+    const deleteBookPromises = booksArray.map((book) => deleteBook(book.firebaseKey));
+
+    Promise.all(deleteBookPromises).then(() => {
+      deleteSingleAuthor(authorid).then(resolve);
+    });
+  }).catch((error) => reject(error));
+});
+
+export { viewBookDetails, viewAuthorDetails, deleteAuthorBooks };

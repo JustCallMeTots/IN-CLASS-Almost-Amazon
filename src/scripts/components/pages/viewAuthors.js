@@ -4,7 +4,10 @@ import renderToDOM from '../../helpers/renderToDom';
 const viewAuthor = (obj) => {
   clearDom();
 
-  const domString = `
+  let domString = '';
+  let bookString = '';
+
+  domString += `
     <div class="mt-5 d-flex flex-wrap">
      <div class="d-flex flex-column">
        <div class="mt-5">
@@ -17,21 +20,24 @@ const viewAuthor = (obj) => {
        Author Email: <a href="mailto:${obj.email}">${obj.email}</a>
        <p>${obj.description || ''}</p>
        <hr>
-      </div>
-      
-      <div class="card">
-        <img class="card-img-top" src=${obj.image} alt=${obj.title} style="height: 400px;">
+      </div>`;
+  renderToDOM('#view', domString);
+
+  obj.authorBooks.forEach((book) => {
+    bookString += `<div class="card">
+        <img class="card-img-top" src=${book.image} alt=${book.title} style="height: 400px;">
         <div class="card-body" style="height: 180px;">
-          <h5 class="card-title">${obj.title}</h5>
-            <p class="card-text bold">${obj.sale ? `<span class="badge badge-info sale-badge"><i class="fa fa-bell" aria-hidden="true"></i> Sale</span> $${obj.price}` : `$${obj.price}`}</p>
+          <h5 class="card-title">${book.title}</h5>
+            <p class="card-text bold">${book.sale ? `<span class="badge badge-info sale-badge"><i class="fa fa-bell" aria-hidden="true"></i> Sale</span> $${book.price}` : `$${book.price}`}</p>
             <hr>
-            <i class="btn btn-success fas fa-eye" id="view-book-btn--${obj.firebaseKey}"></i>
-            <i id="edit-book-btn--${obj.firebaseKey}" class="fas fa-edit btn btn-info"></i>
-            <i id="delete-book-btn--${obj.firebaseKey}" class="btn btn-danger fas fa-trash-alt"></i>
+            <i class="btn btn-success fas fa-eye" id="view-book-btn--${book.firebaseKey}"></i>
+            <i id="edit-book-btn--${book.firebaseKey}" class="fas fa-edit btn btn-info"></i>
+            <i id="delete-book-btn--${book.firebaseKey}" class="btn btn-danger fas fa-trash-alt"></i>
         </div>
       </div>`;
+  });
 
-  renderToDOM('#view', domString);
+  renderToDOM('#store', bookString);
 };
 
 export default viewAuthor;
