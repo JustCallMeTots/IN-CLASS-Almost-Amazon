@@ -9,7 +9,7 @@ import { showBooks } from '../components/pages/books';
 import viewAuthor from '../components/pages/viewAuthors';
 import viewBook from '../components/pages/viewBook';
 
-const domEvents = () => {
+const domEvents = (uid) => {
   document.querySelector('#main-container').addEventListener('click', (e) => {
     // TODO: CLICK EVENT FOR DELETING A BOOK
     if (e.target.id.includes('delete-book')) {
@@ -23,7 +23,7 @@ const domEvents = () => {
 
     // TODO: CLICK EVENT FOR SHOWING FORM FOR ADDING A BOOK
     if (e.target.id.includes('add-book-btn')) {
-      addBookForm();
+      addBookForm(uid);
       // console.warn('ADD BOOK');
     }
 
